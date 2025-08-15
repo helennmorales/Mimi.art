@@ -11,12 +11,13 @@
 <meta http-equiv="Permissions-Policy" content="interest-cohort=(), upselling=(), compute-pressure=(), hid=(), serial=(), bluetooth=()">
 <style>
     :root {
-        --primary-color: #ff69b4; /* Rosa fuerte */
-        --secondary-color: #ffb6c1; /* Rosa claro */
-        --dark-color: #4b0082; /* Violeta oscuro para contraste */
-        --light-bg: #f8f0ff; /* Fondo muy claro */
+        --primary-color: #5dade2; /* Azul suave */
+        --secondary-color: #aed6f1; /* Azul muy claro */
+        --dark-color: #2e86c1; /* Azul más intenso para contraste */
+        --light-bg: #e8f6f3; /* Fondo muy claro, con un toque verde */
         --white-bg: #ffffff;
-        --text-color: #3d3d3d;
+        --text-color: #333333; /* Gris oscuro neutro */
+        --accent-color: #82e0aa; /* Verde suave para acentos */
     }
 
     * {
@@ -39,6 +40,7 @@
         color: var(--white-bg);
         padding: 30px 20px;
         padding-left: 80px; /* Ajuste para que el texto no tape el logo */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .header-container h1 {
@@ -59,7 +61,7 @@
         overflow: hidden;
         box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-    
+
     .logo img {
         width: 100%;
         height: 100%;
@@ -79,6 +81,7 @@
         margin-bottom: 40px;
         box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         text-align: center;
+        border-left: 5px solid var(--accent-color); /* Línea sutil en el info box */
     }
 
     .info-box h2 {
@@ -90,6 +93,7 @@
     .info-box p {
         margin-bottom: 12px;
         font-size: 1rem;
+        color: var(--text-color);
     }
 
     .phone-box {
@@ -102,16 +106,17 @@
 
     .phone-box div {
         background: var(--secondary-color);
-        color: var(--white-bg);
+        color: var(--dark-color);
         padding: 12px 18px;
         border-radius: 8px;
         font-weight: 600;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, background 0.3s ease;
     }
 
     .phone-box div:hover {
         background: var(--primary-color);
+        color: var(--white-bg);
         cursor: pointer;
         transform: translateY(-3px);
     }
@@ -127,6 +132,20 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 20px;
+        padding-bottom: 20px; /* Espacio para el indicador */
+        position: relative; /* Para el pseudo-elemento del indicador */
+    }
+
+    /* Indicador de scroll */
+    .gallery::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 30px;
+        background: linear-gradient(to top, var(--light-bg) 0%, transparent 100%);
+        pointer-events: none; /* Permite hacer clic en elementos debajo */
     }
 
     .gallery-item {
@@ -187,7 +206,7 @@
         color: var(--dark-color);
         margin-bottom: 10px;
     }
-    
+
     .modal-content p#modalPrice {
         font-weight: 600;
         color: var(--primary-color);
@@ -224,7 +243,7 @@
     }
 
     .modal-content button:hover {
-        background: var(--secondary-color);
+        background: var(--dark-color);
         transform: scale(1.05);
     }
 
@@ -248,8 +267,8 @@
         bottom: 30px;
         right: 30px;
         padding: 15px 25px;
-        background: var(--primary-color);
-        color: white;
+        background: var(--accent-color);
+        color: var(--white-bg);
         border: none;
         border-radius: 50px;
         cursor: pointer;
@@ -262,7 +281,7 @@
     }
 
     #buyBtn:hover {
-        background: var(--secondary-color);
+        background: var(--dark-color);
         transform: scale(1.05);
     }
 
@@ -273,6 +292,7 @@
         color: var(--white-bg);
         margin-top: 40px;
         font-size: 0.9rem;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
     }
 
     @keyframes fadeIn {
@@ -385,7 +405,7 @@ function buyAll(){
         alert("❌ No hay productos en el carrito.");
         return;
     }
-    
+
     // 1. Calcula la cantidad total del carrito
     const totalQuantity = cart.reduce((sum, item) => sum + item.qty, 0);
 
@@ -398,17 +418,17 @@ function buyAll(){
     // 3. Determina el precio final por unidad
     const finalPrice = totalQuantity >= 100 ? 1500 : 1800;
     const totalCost = totalQuantity * finalPrice;
-    
+
     // 4. Construye el mensaje para WhatsApp
     let msg = `¡Hola, Mimi Art!\nMe gustaría realizar el siguiente pedido:\n\n`;
     cart.forEach(i => msg += `• ${i.qty} x ${i.name}\n`);
     msg += `\nTotal de unidades: ${totalQuantity}\nPrecio por unidad: $${finalPrice}\nTotal a pagar: $${totalCost}\n\nEspero su confirmación.\n¡Gracias!`;
-    
+
     // 5. Obtiene el número de teléfono y abre WhatsApp
     const phoneElement = document.querySelector('.phone-box');
     const phone = phoneElement.textContent.replace(/\s/g, '').replace('+', '');
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,"_blank");
-    
+
     cart=[];
 }
 </script>
